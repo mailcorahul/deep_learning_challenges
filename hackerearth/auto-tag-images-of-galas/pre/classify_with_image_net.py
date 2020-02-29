@@ -1,5 +1,6 @@
 import sys
 import os
+import json
 
 from tqdm import tqdm
 import cv2
@@ -14,8 +15,12 @@ if __name__ == '__main__':
     data_path = sys.argv[2]
     dest_path = sys.argv[3]
 
+    with open("imagenet_class_index.json") as f:
+        class_idx = json.load(f)
+    idx2label = [class_idx[str(k)][1] for k in range(len(class_idx))]
+
     backbone = getattr(models, backbone_name)
-    net = backbone(pretrained=True)
+    net = backbone(pretrained=True).cuda()
 
     batch_size = 128
     normalize = transforms.Normalize(
@@ -35,5 +40,6 @@ if __name__ == '__main__':
         batch_images = batch_images.cuda()
         with torch.no_grad():
             batch_predictions = net(batch_images)
-            print(batch_predictions)
+            _, max_predictions = torch.max(batch_predictions, dim=1)
+            break
 
