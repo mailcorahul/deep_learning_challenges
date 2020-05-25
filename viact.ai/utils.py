@@ -25,7 +25,7 @@ def _object_xml(box):
 
 def _annotation_xml(bboxes, img_name, dims):
 
-    width, height, channels = dims
+    height, width, channels = dims
     annotation_start = "<annotation>\n \
         <folder>fashion</folder>\n \
         <filename>{}</filename>\n \
